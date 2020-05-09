@@ -1,0 +1,45 @@
+html {
+	background-color: cornsilk;
+	display: flex;
+}
+
+#gameboard {
+	padding: 5px;
+	border-radius: 7px;
+	position: relative;
+}
+
+.squareDiv {
+	position: absolute;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	background: royalblue;
+	border: 1px solid darkblue;
+	width: 120px;
+	height: 120px;
+	padding: 10px;
+}
+
+.circleDiv {
+	border-radius: 60px;
+	background-color: cornsilk;
+	width: 98px !important;
+	height: 98px !important;
+}
+
+.redPlaced {
+	background-color: red !important;
+}
+
+.redHighlight {
+	background-color: #FF6666 !important;
+}
+
+.yellowPlaced {
+	background-color: yellow !important;
+}
+
+.yellowHighLight {
+	background-color: #FFFF99 !important;
+}
