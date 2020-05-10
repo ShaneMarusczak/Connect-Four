@@ -9,6 +9,8 @@
 	const cellSize = 120;
 	const winCheckLength = 3;
 
+	const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 	const gameOverCheck = () => {
 		let counter = 0;
 		for (let i = 0; i < rows; i++) {
@@ -50,22 +52,43 @@
 		return false;
 	};
 
+	const animateDrop = (inputRow, inputCol, currentRow, moveTurn) => {
+		if (currentRow === inputRow) return;
+		document.getElementById("d" + currentRow + inputCol).classList.add(moveTurn ? "redPlaced" : "yellowPlaced");
+		sleep(125).then(() => {
+			document.getElementById("d" + currentRow + inputCol).classList.remove(moveTurn ? "redPlaced" : "yellowPlaced");
+		});
+		sleep(150).then(() => {
+			animateDrop(inputRow, inputCol, currentRow + 1, moveTurn);
+		});
+	};
+
 	const playerMove = e => {
 		if (!gameOver) {
+			document.getElementById("uiblocker").style.display = "block";
 			var col = Number(e.currentTarget.id.substring(2));
+			let temp;
+			const otherTemp = isPlayerMove;
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
+					animateDrop(i, col, 0, isPlayerMove);
 					document.getElementById("d" + i + col).classList.remove("yellowHighLight");
 					document.getElementById("d" + i + col).classList.remove("redHighlight");
-					document.getElementById("d" + i + col).classList.add(isPlayerMove ? "redPlaced" : "yellowPlaced");
 					gameBoard[i][col] = isPlayerMove ? 1 : 2;
+					temp = i;
 					break;
 				}
 			}
-			if (gameOverCheck()) {
-				gameOver = true;
-				alert("Game Over!");
-			}
+			sleep(150 * temp).then(() => {
+				document.getElementById("d" + temp + col).classList.add(otherTemp ? "redPlaced" : "yellowPlaced");
+				sleep(150).then(() => {
+					if (gameOverCheck()) {
+						gameOver = true;
+						alert("Game Over!");
+					}
+					document.getElementById("uiblocker").style.display = "none";
+				});
+			});
 			isPlayerMove = !isPlayerMove;
 		}
 	};
