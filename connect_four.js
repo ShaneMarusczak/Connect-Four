@@ -9,6 +9,7 @@
 	const floatingCircles = document.getElementById("floatingCircles");
 	const cellSize = 120;
 	const winCheckLength = 3;
+	const winners = [];
 
 	const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -27,7 +28,12 @@
 				for (let k = 1; k < winCheckLength + 1; k++) {
 					counter = gameBoard[i][j] == gameBoard[i][j + k] && gameBoard[i][j] > 0 ? counter + 1 : counter;
 				}
-				if (counter === winCheckLength) return true;
+				if (counter === winCheckLength) {
+					for (let k = 0; k < winCheckLength + 1; k++) {
+						winners.push([i, j + k]);
+					}
+					return true;
+				}
 				counter = 0;
 			}
 		}
@@ -36,7 +42,12 @@
 				for (let k = 1; k < winCheckLength + 1; k++) {
 					counter = gameBoard[i][j] == gameBoard[i + k][j] && gameBoard[i][j] > 0 ? counter + 1 : counter;
 				}
-				if (counter === winCheckLength) return true;
+				if (counter === winCheckLength) {
+					for (let k = 0; k < winCheckLength + 1; k++) {
+						winners.push([i + k, j]);
+					}
+					return true;
+				}
 				counter = 0;
 			}
 		}
@@ -45,7 +56,12 @@
 				for (let k = 1; k < winCheckLength + 1; k++) {
 					counter = gameBoard[i][j] == gameBoard[i + k][j + k] && gameBoard[i][j] > 0 ? counter + 1 : counter;
 				}
-				if (counter === winCheckLength) return true;
+				if (counter === winCheckLength) {
+					for (let k = 0; k < winCheckLength + 1; k++) {
+						winners.push([i + k, j + k]);
+					}
+					return true;
+				}
 				counter = 0;
 			}
 		}
@@ -54,7 +70,12 @@
 				for (let k = 1; k < winCheckLength + 1; k++) {
 					counter = gameBoard[i][j] == gameBoard[i + k][j - k] && gameBoard[i][j] > 0 ? counter + 1 : counter;
 				}
-				if (counter === winCheckLength) return true;
+				if (counter === winCheckLength) {
+					for (let k = 0; k < winCheckLength + 1; k++) {
+						winners.push([i + k, j - k]);
+					}
+					return true;
+				}
 				counter = 0;
 			}
 		}
@@ -75,6 +96,12 @@
 				moveTurn
 			});
 		});
+	};
+
+	const winnersHighlight = () => {
+		for (const winner of winners) {
+			document.getElementById("d" + winner[0] + winner[1]).classList.add(isRedTurn ? "redHighlight" : "yellowHighLight");
+		}
 	};
 
 	const playerMove = e => {
@@ -99,6 +126,7 @@
 				document.getElementById("d" + startingRow + col).classList.add(isRedTurn ? "redPlaced" : "yellowPlaced");
 				sleep(150).then(() => {
 					if (gameOverCheck()) {
+						winnersHighlight();
 						gameOver = true;
 						alertModalControl(isRedTurn ? "Red Wins!" : "Yellow Wins!", 2000);
 					}
