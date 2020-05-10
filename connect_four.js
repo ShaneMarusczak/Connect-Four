@@ -61,14 +61,19 @@
 		return false;
 	};
 
-	const animateDrop = (inputRow, inputCol, currentRow, moveTurn) => {
+	const animateDrop = ({ inputRow, inputCol, moveTurn, currentRow = 0 } = {}) => {
 		if (currentRow === inputRow) return;
 		document.getElementById("d" + currentRow + inputCol).classList.add(moveTurn ? "redPlaced" : "yellowPlaced");
-		sleep(125).then(() => {
+		sleep(120).then(() => {
 			document.getElementById("d" + currentRow + inputCol).classList.remove(moveTurn ? "redPlaced" : "yellowPlaced");
 		});
-		sleep(150).then(() => {
-			animateDrop(inputRow, inputCol, currentRow + 1, moveTurn);
+		sleep(125).then(() => {
+			animateDrop({
+				"currentRow": currentRow + 1,
+				inputCol,
+				inputRow,
+				moveTurn
+			});
 		});
 	};
 
@@ -79,14 +84,18 @@
 			let startingRow;
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
-					animateDrop(i, col, 0, isRedTurn);
+					animateDrop({
+						"inputCol": col,
+						"inputRow": i,
+						"moveTurn": isRedTurn
+					});
 					document.getElementById("d" + i + col).classList.remove(isRedTurn ? "redHighlight" : "yellowHighLight");
 					gameBoard[i][col] = isRedTurn ? 1 : 2;
 					startingRow = i;
 					break;
 				}
 			}
-			sleep(150 * startingRow).then(() => {
+			sleep(125 * startingRow).then(() => {
 				document.getElementById("d" + startingRow + col).classList.add(isRedTurn ? "redPlaced" : "yellowPlaced");
 				sleep(150).then(() => {
 					if (gameOverCheck()) {
