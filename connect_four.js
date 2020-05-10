@@ -1,6 +1,6 @@
 "use strict";
 (() => {
-	let isPlayerMove = true;
+	let isRedTurn = true;
 	let gameOver = false;
 	const rows = 6;
 	const cols = 7;
@@ -79,22 +79,22 @@
 			let startingRow;
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
-					animateDrop(i, col, 0, isPlayerMove);
-					document.getElementById("d" + i + col).classList.remove(isPlayerMove ? "redHighlight" : "yellowHighLight");
-					gameBoard[i][col] = isPlayerMove ? 1 : 2;
+					animateDrop(i, col, 0, isRedTurn);
+					document.getElementById("d" + i + col).classList.remove(isRedTurn ? "redHighlight" : "yellowHighLight");
+					gameBoard[i][col] = isRedTurn ? 1 : 2;
 					startingRow = i;
 					break;
 				}
 			}
 			sleep(150 * startingRow).then(() => {
-				document.getElementById("d" + startingRow + col).classList.add(isPlayerMove ? "redPlaced" : "yellowPlaced");
+				document.getElementById("d" + startingRow + col).classList.add(isRedTurn ? "redPlaced" : "yellowPlaced");
 				sleep(150).then(() => {
 					if (gameOverCheck()) {
 						gameOver = true;
-						alertModalControl(isPlayerMove ? "Red Wins!" : "Yellow Wins!", 2000);
+						alertModalControl(isRedTurn ? "Red Wins!" : "Yellow Wins!", 2000);
 					}
 					document.getElementById("uiblocker").style.display = "none";
-					isPlayerMove = !isPlayerMove;
+					isRedTurn = !isRedTurn;
 				});
 			});
 		}
@@ -105,8 +105,8 @@
 			var col = Number(e.currentTarget.id.substring(2));
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
-					document.getElementById("d" + i + col).classList.add(isPlayerMove ? "redHighlight" : "yellowHighLight");
-					document.getElementById("fc" + col).classList.add(isPlayerMove ? "redBounce" : "yellowBounce");
+					document.getElementById("d" + i + col).classList.add(isRedTurn ? "redHighlight" : "yellowHighLight");
+					document.getElementById("fc" + col).classList.add(isRedTurn ? "redBounce" : "yellowBounce");
 					document.getElementById("fc" + col).classList.add("gbounce");
 					break;
 				}
@@ -117,12 +117,12 @@
 	const highLightMoveReset = e => {
 		if (!gameOver) {
 			var col = Number(e.currentTarget.id.substring(2));
-			document.getElementById("fc" + col).classList.remove(isPlayerMove ? "redBounce" : "yellowBounce");
+			document.getElementById("fc" + col).classList.remove(isRedTurn ? "redBounce" : "yellowBounce");
 			document.getElementById("fc" + col).classList.remove("gbounce");
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
 					document.getElementById("d" + i + col).classList.remove("highLightFade");
-					document.getElementById("d" + i + col).classList.remove(isPlayerMove ? "redHighlight" : "yellowHighLight");
+					document.getElementById("d" + i + col).classList.remove(isRedTurn ? "redHighlight" : "yellowHighLight");
 					break;
 				}
 			}
