@@ -123,6 +123,8 @@
 	};
 
 	(() => {
+		document.getElementById("strtOvrBtn").addEventListener("click", () => location.reload());
+
 		for (let i = 0; i < cols; i++) {
 			const circle = document.createElement("div");
 			circle.id = "fc" + i;
