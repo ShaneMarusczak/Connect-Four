@@ -147,7 +147,8 @@ h1 {
 }
 
 .redHighlight {
-	background-color: #FF6666 !important;
+	animation: highLightFadeRed 2.5s;
+	animation-iteration-count: infinite;
 }
 
 .yellowPlaced {
@@ -160,8 +161,36 @@ h1 {
 }
 
 .yellowHighLight {
-	background-color: #FFFF99 !important;
+	animation: highLightFadeYellow 2.5s;
+	animation-iteration-count: infinite;
+}
 
+@keyframes highLightFadeYellow {
+	0% {
+		background-color: yellow;
+	}
+
+	50% {
+		background-color: #FFFF99;
+	}
+
+	100% {
+		background-color: yellow;
+	}
+}
+
+@keyframes highLightFadeRed {
+	0% {
+		background-color: red;
+	}
+
+	50% {
+		background-color: #FF6666;
+	}
+
+	100% {
+		background-color: red;
+	}
 }
 
 footer {
@@ -175,7 +204,7 @@ footer {
 #strtOvrBtn {
 	display: inline-block;
 	width: fit-content;
-	font-size: 1.7em;
+	font-size: 1.5em;
 	padding: 5px;
 	border: solid black;
 	border-radius: 7px;

@@ -80,8 +80,7 @@
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
 					animateDrop(i, col, 0, isPlayerMove);
-					document.getElementById("d" + i + col).classList.remove("yellowHighLight");
-					document.getElementById("d" + i + col).classList.remove("redHighlight");
+					document.getElementById("d" + i + col).classList.remove(isPlayerMove ? "redHighlight" : "yellowHighLight");
 					gameBoard[i][col] = isPlayerMove ? 1 : 2;
 					startingRow = i;
 					break;
@@ -96,7 +95,6 @@
 					}
 					document.getElementById("uiblocker").style.display = "none";
 					isPlayerMove = !isPlayerMove;
-
 				});
 			});
 		}
@@ -123,6 +121,7 @@
 				if (gameBoard[i][col] === 0) {
 					document.getElementById("fc" + col).classList.remove(isPlayerMove ? "redBounce" : "yellowBounce");
 					document.getElementById("fc" + col).classList.remove("gbounce");
+					document.getElementById("d" + i + col).classList.remove("highLightFade");
 					document.getElementById("d" + i + col).classList.remove(isPlayerMove ? "redHighlight" : "yellowHighLight");
 					break;
 				}
