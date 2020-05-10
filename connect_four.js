@@ -67,29 +67,29 @@
 		if (!gameOver) {
 			document.getElementById("uiblocker").style.display = "block";
 			var col = Number(e.currentTarget.id.substring(2));
-			let temp;
-			const otherTemp = isPlayerMove;
+			let startingRow;
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
 					animateDrop(i, col, 0, isPlayerMove);
 					document.getElementById("d" + i + col).classList.remove("yellowHighLight");
 					document.getElementById("d" + i + col).classList.remove("redHighlight");
 					gameBoard[i][col] = isPlayerMove ? 1 : 2;
-					temp = i;
+					startingRow = i;
 					break;
 				}
 			}
-			sleep(150 * temp).then(() => {
-				document.getElementById("d" + temp + col).classList.add(otherTemp ? "redPlaced" : "yellowPlaced");
+			sleep(150 * startingRow).then(() => {
+				document.getElementById("d" + startingRow + col).classList.add(isPlayerMove ? "redPlaced" : "yellowPlaced");
 				sleep(150).then(() => {
 					if (gameOverCheck()) {
 						gameOver = true;
 						alert("Game Over!");
 					}
 					document.getElementById("uiblocker").style.display = "none";
+					isPlayerMove = !isPlayerMove;
+
 				});
 			});
-			isPlayerMove = !isPlayerMove;
 		}
 	};
 
