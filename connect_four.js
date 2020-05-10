@@ -103,11 +103,11 @@
 	const highLightMove = e => {
 		if (!gameOver) {
 			var col = Number(e.currentTarget.id.substring(2));
-			document.getElementById("fc" + col).classList.add(isPlayerMove ? "redBounce" : "yellowBounce");
-			document.getElementById("fc" + col).classList.add("gbounce");
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
 					document.getElementById("d" + i + col).classList.add(isPlayerMove ? "redHighlight" : "yellowHighLight");
+					document.getElementById("fc" + col).classList.add(isPlayerMove ? "redBounce" : "yellowBounce");
+					document.getElementById("fc" + col).classList.add("gbounce");
 					break;
 				}
 			}
@@ -117,10 +117,10 @@
 	const highLightMoveReset = e => {
 		if (!gameOver) {
 			var col = Number(e.currentTarget.id.substring(2));
+			document.getElementById("fc" + col).classList.remove(isPlayerMove ? "redBounce" : "yellowBounce");
+			document.getElementById("fc" + col).classList.remove("gbounce");
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
-					document.getElementById("fc" + col).classList.remove(isPlayerMove ? "redBounce" : "yellowBounce");
-					document.getElementById("fc" + col).classList.remove("gbounce");
 					document.getElementById("d" + i + col).classList.remove("highLightFade");
 					document.getElementById("d" + i + col).classList.remove(isPlayerMove ? "redHighlight" : "yellowHighLight");
 					break;
