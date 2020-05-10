@@ -12,6 +12,14 @@
 
 	const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+	const alertModalControl = (message, duration) => {
+		document.getElementById("alertshader").style.display = "block";
+		document.getElementById("alertmessage").innerText = message;
+		sleep(duration).then(() => {
+			document.getElementById("alertshader").style.display = "none";
+		});
+	};
+
 	const gameOverCheck = () => {
 		let counter = 0;
 		for (let i = 0; i < rows; i++) {
@@ -84,7 +92,7 @@
 				sleep(150).then(() => {
 					if (gameOverCheck()) {
 						gameOver = true;
-						alert("Game Over!");
+						alertModalControl(isPlayerMove ? "Red Wins!" : "Yellow Wins!", 2000);
 					}
 					document.getElementById("uiblocker").style.display = "none";
 					isPlayerMove = !isPlayerMove;
