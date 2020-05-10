@@ -6,6 +6,7 @@
 	const cols = 7;
 	const gameBoard = [];
 	const gameBoardContainer = document.getElementById("gameboard");
+	const floatingCircles = document.getElementById("floatingCircles");
 	const cellSize = 120;
 	const winCheckLength = 3;
 
@@ -96,6 +97,8 @@
 	const highLightMove = e => {
 		if (!gameOver) {
 			var col = Number(e.currentTarget.id.substring(2));
+			document.getElementById("fc" + col).classList.add(isPlayerMove ? "redBounce" : "yellowBounce");
+			document.getElementById("fc" + col).classList.add("gbounce");
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
 					document.getElementById("d" + i + col).classList.add(isPlayerMove ? "redHighlight" : "yellowHighLight");
@@ -110,8 +113,9 @@
 			var col = Number(e.currentTarget.id.substring(2));
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
-					document.getElementById("d" + i + col).classList.remove("yellowHighLight");
-					document.getElementById("d" + i + col).classList.remove("redHighlight");
+					document.getElementById("fc" + col).classList.remove(isPlayerMove ? "redBounce" : "yellowBounce");
+					document.getElementById("fc" + col).classList.remove("gbounce");
+					document.getElementById("d" + i + col).classList.remove(isPlayerMove ? "redHighlight" : "yellowHighLight");
 					break;
 				}
 			}
@@ -120,6 +124,10 @@
 
 	(() => {
 		for (let i = 0; i < cols; i++) {
+			const circle = document.createElement("div");
+			circle.id = "fc" + i;
+			circle.classList.add("floatingCircle");
+			floatingCircles.appendChild(circle);
 			for (let j = 0; j < rows; j++) {
 				const cell = document.createElement("div");
 				gameBoardContainer.appendChild(cell);

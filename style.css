@@ -1,6 +1,17 @@
+@import url("https://fonts.googleapis.com/css?family=Orbitron&display=swap");
+
 html {
 	background-color: cornsilk;
-	display: flex;
+	font-family: "Orbitron", sans-serif;
+}
+
+header {
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+h1 {
+	font-size: 2.5rem;
 }
 
 #uiblocker {
@@ -17,9 +28,11 @@ html {
 }
 
 #gameboard {
+	margin: 0 auto;
 	padding: 5px;
-	border-radius: 7px;
 	position: relative;
+	width: 840px;
+	height: 720px;
 }
 
 .squareDiv {
@@ -34,6 +47,13 @@ html {
 	padding: 10px;
 }
 
+#floatingCircles {
+	margin: 0 auto;
+	display: flex;
+	width: 840px;
+	height: 120px;
+}
+
 .circleDiv {
 	border-radius: 60px;
 	background-color: cornsilk;
@@ -41,8 +61,41 @@ html {
 	height: 98px !important;
 }
 
+.floatingCircle {
+	background-color: transparent;
+	border-radius: 90px;
+	width: 100px !important;
+	height: 100px !important;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+@keyframes gbounce {
+	0% {
+		transform: translateY(10px);
+	}
+
+	50% {
+		transform: translateY(-35px);
+	}
+
+	100% {
+		transform: translateY(10px);
+	}
+}
+
+.gbounce {
+	animation: gbounce 2.8s;
+	animation-iteration-count: infinite;
+}
+
 .redPlaced {
 	background-color: red !important;
+}
+
+.redBounce {
+	background-color: red !important;
+	border: 2px solid darkgray;
 }
 
 .redHighlight {
@@ -53,6 +106,12 @@ html {
 	background-color: yellow !important;
 }
 
+.yellowBounce {
+	background-color: yellow !important;
+	border: 2px solid darkgray;
+}
+
 .yellowHighLight {
 	background-color: #FFFF99 !important;
+
 }
