@@ -7,7 +7,59 @@ html {
 
 header {
 	text-align: center;
-	margin-bottom: 25px;
+}
+
+h1 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+#choice {
+	top: 250px;
+	left: 50px;
+	width: 300px;
+	height: 375px;
+	text-align: center;
+	border-radius: 7px;
+	position: absolute;
+	border: 2px solid black;
+}
+
+#instructions {
+	font-size: 1.6rem;
+}
+
+#intSubText {
+	font-size: 1rem;
+}
+
+#choosePieces {
+	padding: 10px;
+	display: flex;
+	flex-direction: row;
+}
+
+#selectRed {
+	border-radius: 60px;
+	background-color: red;
+	width: 98px !important;
+	height: 98px !important;
+	border: 2px solid darkgray;
+	margin-right: 35px;
+	margin-left: 20px;
+}
+
+#selectYellow {
+	border-radius: 60px;
+	background-color: yellow;
+	width: 98px !important;
+	height: 98px !important;
+	border: 2px solid darkgray;
+}
+
+#selectRed:hover,
+#selectYellow:hover {
+	cursor: pointer;
 }
 
 #alertshader {
@@ -96,6 +148,7 @@ h1 {
 }
 
 #floatingCircles {
+	padding-top: 30px;
 	margin: 0 auto;
 	display: flex;
 	width: 840px;
@@ -120,15 +173,15 @@ h1 {
 
 @keyframes gbounce {
 	0% {
-		transform: translateY(10px);
+		transform: translateY(15px);
 	}
 
 	50% {
-		transform: translateY(-25px);
+		transform: translateY(-20px);
 	}
 
 	100% {
-		transform: translateY(10px);
+		transform: translateY(15px);
 	}
 }
 
@@ -138,11 +191,11 @@ h1 {
 }
 
 .redPlaced {
-	background-color: red !important;
+	background-color: red;
 }
 
 .redBounce {
-	background-color: red !important;
+	background-color: red;
 	border: 2px solid darkgray;
 }
 
@@ -152,11 +205,11 @@ h1 {
 }
 
 .yellowPlaced {
-	background-color: yellow !important;
+	background-color: yellow;
 }
 
 .yellowBounce {
-	background-color: yellow !important;
+	background-color: yellow;
 	border: 2px solid darkgray;
 }
 

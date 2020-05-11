@@ -1,7 +1,9 @@
 "use strict";
 (() => {
-	let isRedTurn = true;
+	let playerIsRed = true;
+	let isPlayersTurn = false;
 	let gameOver = false;
+	let gameStarted = false;
 	const rows = 6;
 	const cols = 7;
 	const gameBoard = [];
@@ -98,14 +100,14 @@
 		});
 	};
 
-	const winnersHighlight = () => {
+	const winnersHighlight = (color) => {
 		for (const winner of winners) {
-			document.getElementById("d" + winner[0] + winner[1]).classList.add(isRedTurn ? "redHighlight" : "yellowHighLight");
+			document.getElementById("d" + winner[0] + winner[1]).classList.add(color);
 		}
 	};
 
 	const playerMove = e => {
-		if (!gameOver) {
+		if (!gameOver && gameStarted && isPlayersTurn) {
 			document.getElementById("uiblocker").style.display = "block";
 			var col = Number(e.currentTarget.id.substring(2));
 			let startingRow;
@@ -114,36 +116,37 @@
 					animateDrop({
 						"inputCol": col,
 						"inputRow": i,
-						"moveTurn": isRedTurn
+						"moveTurn": playerIsRed
 					});
-					document.getElementById("d" + i + col).classList.remove(isRedTurn ? "redHighlight" : "yellowHighLight");
-					gameBoard[i][col] = isRedTurn ? 1 : 2;
+					document.getElementById("d" + i + col).classList.remove(playerIsRed ? "redHighlight" : "yellowHighLight");
+					gameBoard[i][col] = playerIsRed ? 1 : 2;
 					startingRow = i;
 					break;
 				}
 			}
 			sleep(125 * startingRow).then(() => {
-				document.getElementById("d" + startingRow + col).classList.add(isRedTurn ? "redPlaced" : "yellowPlaced");
+				document.getElementById("d" + startingRow + col).classList.add(playerIsRed ? "redPlaced" : "yellowPlaced");
 				sleep(150).then(() => {
-					if (gameOverCheck()) {
-						winnersHighlight();
-						gameOver = true;
-						alertModalControl(isRedTurn ? "Red Wins!" : "Yellow Wins!", 2000);
-					}
 					document.getElementById("uiblocker").style.display = "none";
-					isRedTurn = !isRedTurn;
+					if (gameOverCheck()) {
+						winnersHighlight(playerIsRed ? "redHighlight" : "yellowHighLight");
+						gameOver = true;
+						alertModalControl("Player Wins!", 2000);
+						return;
+					}
+					compMove();
 				});
 			});
 		}
 	};
 
 	const highLightMove = e => {
-		if (!gameOver) {
+		if (!gameOver && gameStarted && isPlayersTurn) {
 			var col = Number(e.currentTarget.id.substring(2));
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
-					document.getElementById("d" + i + col).classList.add(isRedTurn ? "redHighlight" : "yellowHighLight");
-					document.getElementById("fc" + col).classList.add(isRedTurn ? "redBounce" : "yellowBounce");
+					document.getElementById("d" + i + col).classList.add(playerIsRed ? "redHighlight" : "yellowHighLight");
+					document.getElementById("fc" + col).classList.add(playerIsRed ? "redBounce" : "yellowBounce");
 					document.getElementById("fc" + col).classList.add("gbounce");
 					break;
 				}
@@ -152,22 +155,75 @@
 	};
 
 	const highLightMoveReset = e => {
-		if (!gameOver) {
+		if (!gameOver && gameStarted && isPlayersTurn) {
 			var col = Number(e.currentTarget.id.substring(2));
-			document.getElementById("fc" + col).classList.remove(isRedTurn ? "redBounce" : "yellowBounce");
+			document.getElementById("fc" + col).classList.remove(playerIsRed ? "redBounce" : "yellowBounce");
 			document.getElementById("fc" + col).classList.remove("gbounce");
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
-					document.getElementById("d" + i + col).classList.remove("highLightFade");
-					document.getElementById("d" + i + col).classList.remove(isRedTurn ? "redHighlight" : "yellowHighLight");
+					document.getElementById("d" + i + col).classList.remove(playerIsRed ? "redHighlight" : "yellowHighLight");
 					break;
 				}
 			}
 		}
 	};
 
+	const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+
+	const compMove = () => {
+		document.getElementById("uiblocker").style.display = "block";
+		const col = randomIntFromInterval(0, cols - 1);
+		for (let i = rows - 1; i > -1; i--) {
+			if (gameBoard[i][col] === 0) {
+				animateDrop({
+					"inputCol": col,
+					"inputRow": i,
+					"moveTurn": !playerIsRed
+				});
+				gameBoard[i][col] = playerIsRed ? 2 : 1;
+				compStepTwo(i, col);
+				return;
+			}
+		}
+		compMove();
+	};
+
+	const compStepTwo = (row, col) => {
+		sleep(125 * row).then(() => {
+			document.getElementById("d" + row + col).classList.add(playerIsRed ? "yellowPlaced" : "redPlaced");
+			sleep(150).then(() => {
+				document.getElementById("uiblocker").style.display = "none";
+				if (gameOverCheck()) {
+					winnersHighlight(playerIsRed ? "yellowHighLight" : "redHighlight");
+					gameOver = true;
+					alertModalControl("Computer Wins!", 2000);
+					return;
+				}
+			});
+		});
+		isPlayersTurn = true;
+	};
+
+	const redChosen = () => {
+		document.getElementById("choice").style.display = "none";
+		gameStarted = true;
+		playerIsRed = true;
+		isPlayersTurn = true;
+	};
+
+	const yellowChosen = () => {
+		document.getElementById("uiblocker").style.display = "block";
+		document.getElementById("choice").style.display = "none";
+		gameStarted = true;
+		playerIsRed = false;
+		sleep(400).then(() => compMove());
+	};
+
 	(() => {
 		document.getElementById("strtOvrBtn").addEventListener("click", () => location.reload());
+		document.getElementById("selectRed").addEventListener("click", redChosen);
+		document.getElementById("selectYellow").addEventListener("click", yellowChosen);
+
 
 		for (let i = 0; i < cols; i++) {
 			const circle = document.createElement("div");

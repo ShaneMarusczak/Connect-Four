@@ -17,17 +17,25 @@
 
 <body>
 	<header>
-		<h1>Connect Four</h1>
 		<a id="gitHubLink" href="https://github.com/ShaneMarusczak/Connect-Four" target="_blank" rel="noreferrer"><img
 				id="githubicon" src="github-icon.jpg"></a>
 	</header>
 	<div id="main">
+		<div id="choice">
+			<h1>Connect Four</h1>
+			<p id="instructions">Choose Red or Yellow</p>
+			<p id="intSubText">Red plays first!</p>
+			<div id="choosePieces">
+				<div id="selectRed"></div>
+				<div id="selectYellow"></div>
+			</div>
+		</div>
 		<div id="floatingCircles"></div>
 		<div id="gameboard"></div>
 	</div>
 	<footer>
 		<p id="strtOvrBtn">Start Over</p>
-		<p id="updateText">Last Updated: May 10, 2020</p>
+		<p id="updateText">Last Updated: May 11, 2020</p>
 	</footer>
 </body>
 <script type="text/javascript" src="connect_four.js"></script>
