@@ -127,14 +127,13 @@
 			sleep(125 * startingRow).then(() => {
 				document.getElementById("d" + startingRow + col).classList.add(playerIsRed ? "redPlaced" : "yellowPlaced");
 				sleep(150).then(() => {
-					document.getElementById("uiblocker").style.display = "none";
 					if (gameOverCheck()) {
 						winnersHighlight(playerIsRed ? "redHighlight" : "yellowHighLight");
 						gameOver = true;
 						alertModalControl("Player Wins!", 2000);
-						return;
+					} else {
+						sleep(200).then(() => compMove());
 					}
-					compMove();
 				});
 			});
 		}
