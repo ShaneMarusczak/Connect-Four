@@ -131,6 +131,7 @@
 						winnersHighlight(playerIsRed ? "redHighlight" : "yellowHighLight");
 						gameOver = true;
 						alertModalControl("Player Wins!", 2000);
+						document.getElementById("uiblocker").style.display = "none";
 					} else {
 						sleep(200).then(() => compMove());
 					}
