@@ -4,6 +4,7 @@
 	let isPlayersTurn = false;
 	let gameOver = false;
 	let gameStarted = false;
+	let playerPlayedColumn;
 	const rows = 6;
 	const cols = 7;
 	const gameBoard = [];
@@ -110,6 +111,7 @@
 		if (!gameOver && gameStarted && isPlayersTurn) {
 			document.getElementById("uiblocker").style.display = "block";
 			var col = Number(e.currentTarget.id.substring(2));
+			playerPlayedColumn = col;
 			let startingRow;
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
@@ -172,7 +174,22 @@
 
 	const compMove = () => {
 		document.getElementById("uiblocker").style.display = "block";
-		const col = randomIntFromInterval(0, cols - 1);
+		let col = playerPlayedColumn;
+		if (isNaN(col)) {
+			col = randomIntFromInterval(0, cols - 1);
+		} else {
+			const dropChance = randomIntFromInterval(0, 2);
+			if (dropChance === 0 && col + 1 < cols - 1) {
+				col = playerPlayedColumn + 1;
+			} else if (dropChance === 1) {
+				col = playerPlayedColumn;
+			} else if (dropChance === 2 && col - 1 >= 0) {
+				col = playerPlayedColumn - 1;
+			} else {
+				col = randomIntFromInterval(0, cols - 1);
+			}
+		}
+
 		for (let i = rows - 1; i > -1; i--) {
 			if (gameBoard[i][col] === 0) {
 				animateDrop({
