@@ -15,11 +15,14 @@ h1 {
 }
 
 #choice {
+	display: flex;
 	top: 250px;
 	left: 50px;
 	width: 300px;
 	height: 375px;
 	text-align: center;
+	align-items: center;
+	flex-direction: column;
 	border-radius: 7px;
 	position: absolute;
 	border: 2px solid black;
@@ -27,29 +30,32 @@ h1 {
 
 #instructions {
 	font-size: 1.6rem;
+	margin-bottom: 0;
 }
 
 #intSubText {
 	font-size: 1rem;
+	margin-bottom: 20px;
 }
 
 #choosePieces {
-	padding: 10px;
 	display: flex;
 	flex-direction: row;
+	width: inherit;
+	justify-content: space-evenly;
 }
 
 #selectRed {
+	transition: 1s;
 	border-radius: 60px;
 	background-color: red;
 	width: 98px !important;
 	height: 98px !important;
 	border: 2px solid darkgray;
-	margin-right: 35px;
-	margin-left: 20px;
 }
 
 #selectYellow {
+	transition: 1s;
 	border-radius: 60px;
 	background-color: yellow;
 	width: 98px !important;
@@ -57,9 +63,9 @@ h1 {
 	border: 2px solid darkgray;
 }
 
-#selectRed:hover,
-#selectYellow:hover {
+.pointerCursor:hover {
 	cursor: pointer;
+
 }
 
 #alertshader {

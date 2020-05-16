@@ -222,15 +222,19 @@
 	};
 
 	const redChosen = () => {
-		document.getElementById("choice").style.display = "none";
 		gameStarted = true;
 		playerIsRed = true;
 		isPlayersTurn = true;
+		document.getElementById("selectYellow").style.display = "none";
+		document.getElementById("selectRed").removeEventListener("click", redChosen);
+		document.getElementById("selectRed").classList.remove("pointerCursor");
 	};
 
 	const yellowChosen = () => {
 		document.getElementById("uiblocker").style.display = "block";
-		document.getElementById("choice").style.display = "none";
+		document.getElementById("selectRed").style.display = "none";
+		document.getElementById("selectYellow").removeEventListener("click", yellowChosen);
+		document.getElementById("selectYellow").classList.remove("pointerCursor");
 		gameStarted = true;
 		playerIsRed = false;
 		sleep(400).then(() => compMove());
