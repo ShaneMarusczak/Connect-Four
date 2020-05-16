@@ -17,8 +17,8 @@ h1 {
 #choice {
 	display: flex;
 	top: 250px;
-	left: 50px;
-	width: 300px;
+	left: 5vw;
+	width: 250px;
 	height: 375px;
 	text-align: center;
 	align-items: center;
@@ -27,6 +27,66 @@ h1 {
 	position: absolute;
 	border: 2px solid black;
 }
+
+@media screen and (max-width: 1334px) {
+	#choice {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		margin-left: auto;
+		margin-right: auto;
+		position: relative;
+		top: auto;
+		left: auto;
+		flex-direction: row;
+		height: 150px !important;
+		width: 800px !important;
+	}
+
+	#floatingCircles {
+		display: none !important;
+	}
+
+	h1 {
+		margin-left: 10px;
+	}
+}
+
+@media screen and (max-width: 1500px) and (min-width: 1335px) {
+
+	#choice {
+		left: 2vw;
+		width: 200px;
+		height: auto;
+		padding: 5px;
+	}
+
+	#selectRed,
+	#selectYellow {
+		margin-bottom: 10px;
+	}
+
+	#choosePieces {
+		flex-direction: column !important;
+		margin: 0 auto;
+		width: 100px !important;
+	}
+
+	h1 {
+		margin-left: 10px;
+	}
+}
+
+@media screen and (max-width: 1335px) {
+	#githubicon {
+		top: 120px !important;
+		left: 1vw;
+	}
+
+	#homeIcon {
+		left: 1vw !important;
+	}
+}
+
 
 #instructions {
 	font-size: 1.6rem;
