@@ -23,6 +23,15 @@
 		});
 	};
 
+	const check = (arr) => {
+		for (const ac of alreadyChecked) {
+			for (const ar of arr) {
+				if (ac[0] == ar[0] && ac[1] == ar[1]) return true;
+			}
+		}
+		return false;
+	};
+
 	const inARowCheck = (inARow, attackMode) => {
 		let counter = 0;
 		let inARowPieces = [];
@@ -37,7 +46,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !alreadyChecked.some(coor => coor === inARowPieces[0])) {
+					} else if (attackMode && !check(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -57,7 +66,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !alreadyChecked.some(coor => coor === inARowPieces[0])) {
+					} else if (attackMode && !check(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -77,7 +86,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !alreadyChecked.some(coor => coor === inARowPieces[0])) {
+					} else if (attackMode && !check(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -97,7 +106,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !alreadyChecked.some(coor => coor === inARowPieces[0])) {
+					} else if (attackMode && !check(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
