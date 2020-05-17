@@ -4,6 +4,7 @@
 	let isPlayersTurn = false;
 	let gameOver = false;
 	let gameStarted = false;
+	const alreadyChecked = [];
 	const rows = 6;
 	const cols = 7;
 	const gameBoard = [];
@@ -11,8 +12,6 @@
 	const floatingCircles = document.getElementById("floatingCircles");
 	const cellSize = 120;
 	const winCheckLength = 3;
-	const alreadyChecked = [];
-
 	const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 	const alertModalControl = (message, duration) => {
@@ -21,15 +20,6 @@
 		sleep(duration).then(() => {
 			document.getElementById("alertshader").style.display = "none";
 		});
-	};
-
-	const check = (arr) => {
-		for (const ac of alreadyChecked) {
-			for (const ar of arr) {
-				if (ac[0] == ar[0] && ac[1] == ar[1]) return true;
-			}
-		}
-		return false;
 	};
 
 	const inARowCheck = (inARow, attackMode) => {
@@ -46,7 +36,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !check(inARowPieces)) {
+					} else if (attackMode && !alreadyChecked.includes(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -66,7 +56,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !check(inARowPieces)) {
+					} else if (attackMode && !alreadyChecked.includes(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -86,7 +76,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !check(inARowPieces)) {
+					} else if (attackMode && !alreadyChecked.includes(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -106,7 +96,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !check(inARowPieces)) {
+					} else if (attackMode && !alreadyChecked.includes(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -209,16 +199,16 @@
 		const twoInARow = inARowCheck(1, true);
 		const foundTwo = twoInARow.length === 2;
 		if (foundTwo && twoInARow[0][1] === twoInARow[1][1] && gameBoard[twoInARow[0][0] - 1][twoInARow[0][1]] === 0) {
-			alreadyChecked.push(twoInARow[0]);
+			alreadyChecked.push(twoInARow);
 			return twoInARow[0][1];
 		}
 		if (foundTwo && twoInARow[0][0] === twoInARow[1][0]) {
 			if (twoInARow[1][1] + 1 < cols - 1 && gameBoard[twoInARow[1][0]][twoInARow[1][1] + 1] === 0) {
-				alreadyChecked.push(twoInARow[1]);
+				alreadyChecked.push(twoInARow);
 				return twoInARow[1][1] + 1;
 			}
 			if (twoInARow[0][1] - 1 >= 0 && gameBoard[twoInARow[0][0]][twoInARow[0][1] - 1] === 0) {
-				alreadyChecked.push(twoInARow[1]);
+				alreadyChecked.push(twoInARow);
 				return twoInARow[0][1] - 1;
 			}
 		}
@@ -248,7 +238,6 @@
 			document.getElementById("d" + row + col).classList.add(playerIsRed ? "yellowPlaced" : "redPlaced");
 			sleep(150).then(() => {
 				const possibleWinners = inARowCheck(winCheckLength, false);
-
 				document.getElementById("uiblocker").style.display = "none";
 				if (possibleWinners.length === 4) {
 					winnersHighlight(playerIsRed ? "yellowHighLight" : "redHighlight", possibleWinners);
