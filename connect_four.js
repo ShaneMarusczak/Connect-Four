@@ -199,6 +199,17 @@
 	const colForComp = () => {
 		const twoInARow = inARowCheck(1, true);
 		const foundTwo = twoInARow.length === 2 && gameBoard[twoInARow[0][0]][twoInARow[0][1]] === playerNumber;
+		const threeInARow = inARowCheck(2, true);
+		const foundThree = threeInARow.length === 3;
+		if (foundThree && threeInARow[0][1] === threeInARow[1][1] && gameBoard[threeInARow[0][0] - 1][threeInARow[0][1]] === 0) return threeInARow[0][1];
+		if (foundThree && threeInARow[0][0] === threeInARow[2][0]) {
+			if (threeInARow[2][1] + 1 < cols - 1 && gameBoard[threeInARow[2][0]][threeInARow[2][1] + 1] === 0) {
+				return threeInARow[2][1] + 1;
+			}
+			if (threeInARow[0][1] - 1 >= 0 && gameBoard[threeInARow[0][0]][threeInARow[0][1] - 1] === 0) {
+				return threeInARow[0][1] - 1;
+			}
+		}
 		if (foundTwo && twoInARow[0][1] === twoInARow[1][1] && gameBoard[twoInARow[0][0] - 1][twoInARow[0][1]] === 0) {
 			alreadyChecked.push(twoInARow);
 			return twoInARow[0][1];
