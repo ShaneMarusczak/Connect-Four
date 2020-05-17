@@ -4,7 +4,6 @@
 	let isPlayersTurn = false;
 	let gameOver = false;
 	let gameStarted = false;
-	let playerPlayedColumn;
 	const rows = 6;
 	const cols = 7;
 	const gameBoard = [];
@@ -12,7 +11,7 @@
 	const floatingCircles = document.getElementById("floatingCircles");
 	const cellSize = 120;
 	const winCheckLength = 3;
-	const winners = [];
+	const alreadyChecked = [];
 
 	const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -24,65 +23,90 @@
 		});
 	};
 
-	const gameOverCheck = () => {
+	const inARowCheck = (inARow, attackMode) => {
 		let counter = 0;
+		let inARowPieces = [];
 		for (let i = 0; i < rows; i++) {
-			for (let j = 0; j <= winCheckLength; j++) {
-				for (let k = 1; k < winCheckLength + 1; k++) {
-					counter = gameBoard[i][j] == gameBoard[i][j + k] && gameBoard[i][j] > 0 ? counter + 1 : counter;
-				}
-				if (counter === winCheckLength) {
-					for (let k = 0; k < winCheckLength + 1; k++) {
-						winners.push([i, j + k]);
-					}
-					return true;
-				}
-				counter = 0;
-			}
-		}
-		for (let i = 0; i < winCheckLength; i++) {
 			for (let j = 0; j < cols; j++) {
-				for (let k = 1; k < winCheckLength + 1; k++) {
-					counter = gameBoard[i][j] == gameBoard[i + k][j] && gameBoard[i][j] > 0 ? counter + 1 : counter;
+				for (let k = 1; k < inARow + 1; k++) {
+					counter = i < rows && j + k < cols && gameBoard[i][j] == gameBoard[i][j + k] && gameBoard[i][j] > 0 ? counter + 1 : counter;
 				}
-				if (counter === winCheckLength) {
-					for (let k = 0; k < winCheckLength + 1; k++) {
-						winners.push([i + k, j]);
+				if (counter === inARow) {
+					for (let k = 0; k < inARow + 1; k++) {
+						inARowPieces.push([i, j + k]);
 					}
-					return true;
+					if (!attackMode) {
+						return inARowPieces;
+					} else if (attackMode && !alreadyChecked.some(coor => coor === inARowPieces[0])) {
+						return inARowPieces;
+					} else {
+						inARowPieces = [];
+					}
 				}
 				counter = 0;
 			}
 		}
-		for (let i = 0; i < winCheckLength; i++) {
-			for (let j = 0; j <= winCheckLength; j++) {
-				for (let k = 1; k < winCheckLength + 1; k++) {
-					counter = gameBoard[i][j] == gameBoard[i + k][j + k] && gameBoard[i][j] > 0 ? counter + 1 : counter;
+		for (let i = 0; i < rows; i++) {
+			for (let j = 0; j < cols; j++) {
+				for (let k = 1; k < inARow + 1; k++) {
+					counter = i + k < rows && j < cols && gameBoard[i][j] == gameBoard[i + k][j] && gameBoard[i][j] > 0 ? counter + 1 : counter;
 				}
-				if (counter === winCheckLength) {
-					for (let k = 0; k < winCheckLength + 1; k++) {
-						winners.push([i + k, j + k]);
+				if (counter === inARow) {
+					for (let k = 0; k < inARow + 1; k++) {
+						inARowPieces.push([i + k, j]);
 					}
-					return true;
+					if (!attackMode) {
+						return inARowPieces;
+					} else if (attackMode && !alreadyChecked.some(coor => coor === inARowPieces[0])) {
+						return inARowPieces;
+					} else {
+						inARowPieces = [];
+					}
 				}
 				counter = 0;
 			}
 		}
-		for (let i = 0; i < winCheckLength; i++) {
-			for (let j = winCheckLength; j < cols; j++) {
-				for (let k = 1; k < winCheckLength + 1; k++) {
-					counter = gameBoard[i][j] == gameBoard[i + k][j - k] && gameBoard[i][j] > 0 ? counter + 1 : counter;
+		for (let i = 0; i < rows; i++) {
+			for (let j = 0; j < cols; j++) {
+				for (let k = 1; k < inARow + 1; k++) {
+					counter = i + k < rows && j + k < cols && gameBoard[i][j] == gameBoard[i + k][j + k] && gameBoard[i][j] > 0 ? counter + 1 : counter;
 				}
-				if (counter === winCheckLength) {
-					for (let k = 0; k < winCheckLength + 1; k++) {
-						winners.push([i + k, j - k]);
+				if (counter === inARow) {
+					for (let k = 0; k < inARow + 1; k++) {
+						inARowPieces.push([i + k, j + k]);
 					}
-					return true;
+					if (!attackMode) {
+						return inARowPieces;
+					} else if (attackMode && !alreadyChecked.some(coor => coor === inARowPieces[0])) {
+						return inARowPieces;
+					} else {
+						inARowPieces = [];
+					}
 				}
 				counter = 0;
 			}
 		}
-		return false;
+		for (let i = 0; i < rows; i++) {
+			for (let j = inARow; j < cols; j++) {
+				for (let k = 1; k < inARow + 1; k++) {
+					counter = i + k < rows && j - k >= 0 && gameBoard[i][j] == gameBoard[i + k][j - k] && gameBoard[i][j] > 0 ? counter + 1 : counter;
+				}
+				if (counter === inARow) {
+					for (let k = 0; k < inARow + 1; k++) {
+						inARowPieces.push([i + k, j - k]);
+					}
+					if (!attackMode) {
+						return inARowPieces;
+					} else if (attackMode && !alreadyChecked.some(coor => coor === inARowPieces[0])) {
+						return inARowPieces;
+					} else {
+						inARowPieces = [];
+					}
+				}
+				counter = 0;
+			}
+		}
+		return inARowPieces;
 	};
 
 	const animateDrop = ({ inputRow, inputCol, moveTurn, currentRow = 0 } = {}) => {
@@ -101,7 +125,7 @@
 		});
 	};
 
-	const winnersHighlight = (color) => {
+	const winnersHighlight = (color, winners) => {
 		for (const winner of winners) {
 			document.getElementById("d" + winner[0] + winner[1]).classList.add(color);
 		}
@@ -111,7 +135,6 @@
 		if (!gameOver && gameStarted && isPlayersTurn) {
 			document.getElementById("uiblocker").style.display = "block";
 			var col = Number(e.currentTarget.id.substring(2));
-			playerPlayedColumn = col;
 			let startingRow;
 			for (let i = rows - 1; i > -1; i--) {
 				if (gameBoard[i][col] === 0) {
@@ -129,8 +152,9 @@
 			sleep(125 * startingRow).then(() => {
 				document.getElementById("d" + startingRow + col).classList.add(playerIsRed ? "redPlaced" : "yellowPlaced");
 				sleep(150).then(() => {
-					if (gameOverCheck()) {
-						winnersHighlight(playerIsRed ? "redHighlight" : "yellowHighLight");
+					const possibleWinners = inARowCheck(winCheckLength, false);
+					if (possibleWinners.length === 4) {
+						winnersHighlight(playerIsRed ? "redHighlight" : "yellowHighLight", possibleWinners);
 						gameOver = true;
 						alertModalControl("Player Wins!", 2000);
 						document.getElementById("uiblocker").style.display = "none";
@@ -172,24 +196,29 @@
 
 	const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
-	const compMove = () => {
-		document.getElementById("uiblocker").style.display = "block";
-		let col = playerPlayedColumn;
-		if (isNaN(col)) {
-			col = randomIntFromInterval(0, cols - 1);
-		} else {
-			const dropChance = randomIntFromInterval(0, 2);
-			if (dropChance === 0 && col + 1 < cols - 1) {
-				col = playerPlayedColumn + 1;
-			} else if (dropChance === 1) {
-				col = playerPlayedColumn;
-			} else if (dropChance === 2 && col - 1 >= 0) {
-				col = playerPlayedColumn - 1;
-			} else {
-				col = randomIntFromInterval(0, cols - 1);
+	const colForComp = () => {
+		const twoInARow = inARowCheck(1, true);
+		const foundTwo = twoInARow.length === 2;
+		if (foundTwo && twoInARow[0][1] === twoInARow[1][1] && gameBoard[twoInARow[0][0] - 1][twoInARow[0][1]] === 0) {
+			alreadyChecked.push(twoInARow[0]);
+			return twoInARow[0][1];
+		}
+		if (foundTwo && twoInARow[0][0] === twoInARow[1][0]) {
+			if (twoInARow[1][1] + 1 < cols - 1 && gameBoard[twoInARow[1][0]][twoInARow[1][1] + 1] === 0) {
+				alreadyChecked.push(twoInARow[1]);
+				return twoInARow[1][1] + 1;
+			}
+			if (twoInARow[0][1] - 1 >= 0 && gameBoard[twoInARow[0][0]][twoInARow[0][1] - 1] === 0) {
+				alreadyChecked.push(twoInARow[1]);
+				return twoInARow[0][1] - 1;
 			}
 		}
+		return randomIntFromInterval(0, cols - 1);
+	};
 
+	const compMove = () => {
+		document.getElementById("uiblocker").style.display = "block";
+		const col = colForComp();
 		for (let i = rows - 1; i > -1; i--) {
 			if (gameBoard[i][col] === 0) {
 				animateDrop({
@@ -209,9 +238,11 @@
 		sleep(125 * row).then(() => {
 			document.getElementById("d" + row + col).classList.add(playerIsRed ? "yellowPlaced" : "redPlaced");
 			sleep(150).then(() => {
+				const possibleWinners = inARowCheck(winCheckLength, false);
+
 				document.getElementById("uiblocker").style.display = "none";
-				if (gameOverCheck()) {
-					winnersHighlight(playerIsRed ? "yellowHighLight" : "redHighlight");
+				if (possibleWinners.length === 4) {
+					winnersHighlight(playerIsRed ? "yellowHighLight" : "redHighlight", possibleWinners);
 					gameOver = true;
 					alertModalControl("Computer Wins!", 2000);
 					return;
