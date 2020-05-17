@@ -23,6 +23,17 @@
 		});
 	};
 
+	const isAlreadyChecked = (arr) => {
+		for (const checked of alreadyChecked) {
+			let counter = 0;
+			for (const ar of arr) {
+				if (checked.includes(ar)) counter++;
+				if (counter === arr.length) return true;
+			}
+		}
+		return false;
+	};
+
 	const inARowCheck = (inARow, attackMode) => {
 		let counter = 0;
 		let inARowPieces = [];
@@ -37,7 +48,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !alreadyChecked.includes(inARowPieces)) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -57,7 +68,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !alreadyChecked.includes(inARowPieces)) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -77,7 +88,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !alreadyChecked.includes(inARowPieces)) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -97,7 +108,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !alreadyChecked.includes(inARowPieces)) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces)) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -201,12 +212,17 @@
 		const foundTwo = twoInARow.length === 2 && gameBoard[twoInARow[0][0]][twoInARow[0][1]] === playerNumber;
 		const threeInARow = inARowCheck(2, true);
 		const foundThree = threeInARow.length === 3;
-		if (foundThree && threeInARow[0][1] === threeInARow[1][1] && gameBoard[threeInARow[0][0] - 1][threeInARow[0][1]] === 0) return threeInARow[0][1];
+		if (foundThree && threeInARow[0][1] === threeInARow[1][1] && gameBoard[threeInARow[0][0] - 1][threeInARow[0][1]] === 0) {
+			alreadyChecked.push(threeInARow);
+			return threeInARow[0][1];
+		}
 		if (foundThree && threeInARow[0][0] === threeInARow[2][0]) {
 			if (threeInARow[2][1] + 1 < cols - 1 && gameBoard[threeInARow[2][0]][threeInARow[2][1] + 1] === 0) {
+				alreadyChecked.push(threeInARow);
 				return threeInARow[2][1] + 1;
 			}
 			if (threeInARow[0][1] - 1 >= 0 && gameBoard[threeInARow[0][0]][threeInARow[0][1] - 1] === 0) {
+				alreadyChecked.push(threeInARow);
 				return threeInARow[0][1] - 1;
 			}
 		}
