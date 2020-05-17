@@ -4,6 +4,7 @@
 	let isPlayersTurn = false;
 	let gameOver = false;
 	let gameStarted = false;
+	let playerNumber;
 	const alreadyChecked = [];
 	const rows = 6;
 	const cols = 7;
@@ -197,7 +198,7 @@
 
 	const colForComp = () => {
 		const twoInARow = inARowCheck(1, true);
-		const foundTwo = twoInARow.length === 2;
+		const foundTwo = twoInARow.length === 2 && gameBoard[twoInARow[0][0]][twoInARow[0][1]] === playerNumber;
 		if (foundTwo && twoInARow[0][1] === twoInARow[1][1] && gameBoard[twoInARow[0][0] - 1][twoInARow[0][1]] === 0) {
 			alreadyChecked.push(twoInARow);
 			return twoInARow[0][1];
@@ -254,6 +255,7 @@
 		gameStarted = true;
 		playerIsRed = true;
 		isPlayersTurn = true;
+		playerNumber = 1;
 		document.getElementById("selectYellow").style.display = "none";
 		document.getElementById("selectRed").removeEventListener("click", redChosen);
 		document.getElementById("selectRed").classList.remove("pointerCursor");
@@ -266,6 +268,7 @@
 		document.getElementById("selectYellow").classList.remove("pointerCursor");
 		gameStarted = true;
 		playerIsRed = false;
+		playerNumber = 2;
 		sleep(400).then(() => compMove());
 	};
 
