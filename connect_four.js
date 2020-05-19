@@ -48,7 +48,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !isAlreadyChecked(inARowPieces)) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === playerNumber) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -68,7 +68,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !isAlreadyChecked(inARowPieces)) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === playerNumber) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -88,7 +88,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !isAlreadyChecked(inARowPieces)) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === playerNumber) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -108,7 +108,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !isAlreadyChecked(inARowPieces)) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === playerNumber) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -209,7 +209,7 @@
 
 	const colForComp = () => {
 		const twoInARow = inARowCheck(1, true);
-		const foundTwo = twoInARow.length === 2 && gameBoard[twoInARow[0][0]][twoInARow[0][1]] === playerNumber;
+		const foundTwo = twoInARow.length === 2;
 		const threeInARow = inARowCheck(2, true);
 		const foundThree = threeInARow.length === 3;
 		if (foundThree && threeInARow[0][1] === threeInARow[1][1] && gameBoard[threeInARow[0][0] - 1][threeInARow[0][1]] === 0) {
@@ -231,11 +231,13 @@
 			return twoInARow[0][1];
 		}
 		if (foundTwo && twoInARow[0][0] === twoInARow[1][0]) {
-			if (twoInARow[1][1] + 1 < cols - 1 && gameBoard[twoInARow[1][0]][twoInARow[1][1] + 1] === 0) {
+			if (twoInARow[1][1] + 1 < cols - 1 &&
+				gameBoard[twoInARow[1][0]][twoInARow[1][1] + 1] === 0) {
 				alreadyChecked.push(twoInARow);
 				return twoInARow[1][1] + 1;
 			}
-			if (twoInARow[0][1] - 1 >= 0 && gameBoard[twoInARow[0][0]][twoInARow[0][1] - 1] === 0) {
+			if (twoInARow[0][1] - 1 >= 0 &&
+				gameBoard[twoInARow[0][0]][twoInARow[0][1] - 1] === 0) {
 				alreadyChecked.push(twoInARow);
 				return twoInARow[0][1] - 1;
 			}
@@ -245,7 +247,10 @@
 
 	const compMove = () => {
 		document.getElementById("uiblocker").style.display = "block";
-		const col = colForComp();
+		let col = colForComp();
+		while (gameBoard[0][col] !== 0) {
+			col = randomIntFromInterval(0, cols - 1);
+		}
 		for (let i = rows - 1; i > -1; i--) {
 			if (gameBoard[i][col] === 0) {
 				animateDrop({
@@ -336,3 +341,4 @@
 		}
 	})();
 })();
+
