@@ -5,6 +5,7 @@
 	let gameOver = false;
 	let gameStarted = false;
 	let playerNumber;
+	let computNumber;
 	const alreadyChecked = [];
 	const rows = 6;
 	const cols = 7;
@@ -25,16 +26,12 @@
 
 	const isAlreadyChecked = (arr) => {
 		for (const checked of alreadyChecked) {
-			let counter = 0;
-			for (const ar of arr) {
-				if (checked.includes(ar)) counter++;
-				if (counter === arr.length) return true;
-			}
+			if (checked == arr) return true;
 		}
 		return false;
 	};
 
-	const inARowCheck = (inARow, attackMode) => {
+	const inARowCheck = ({ inARow, attackMode, toCheck = null } = {}) => {
 		let counter = 0;
 		let inARowPieces = [];
 		for (let i = 0; i < rows; i++) {
@@ -48,7 +45,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === playerNumber) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === toCheck) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -68,7 +65,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === playerNumber) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === toCheck) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -88,7 +85,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === playerNumber) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === toCheck) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -108,7 +105,7 @@
 					}
 					if (!attackMode) {
 						return inARowPieces;
-					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === playerNumber) {
+					} else if (attackMode && !isAlreadyChecked(inARowPieces) && gameBoard[i][j] === toCheck) {
 						return inARowPieces;
 					} else {
 						inARowPieces = [];
@@ -163,7 +160,10 @@
 			sleep(125 * startingRow).then(() => {
 				document.getElementById("d" + startingRow + col).classList.add(playerIsRed ? "redPlaced" : "yellowPlaced");
 				sleep(150).then(() => {
-					const possibleWinners = inARowCheck(winCheckLength, false);
+					const possibleWinners = inARowCheck({
+						"attackMode": false,
+						"inARow": winCheckLength
+					});
 					if (possibleWinners.length === 4) {
 						winnersHighlight(playerIsRed ? "redHighlight" : "yellowHighLight", possibleWinners);
 						gameOver = true;
@@ -208,41 +208,102 @@
 	const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 	const colForComp = () => {
-		const twoInARow = inARowCheck(1, true);
-		const foundTwo = twoInARow.length === 2;
-		const threeInARow = inARowCheck(2, true);
-		const foundThree = threeInARow.length === 3;
-		if (foundThree && threeInARow[0][1] === threeInARow[1][1] && gameBoard[threeInARow[0][0] - 1][threeInARow[0][1]] === 0) {
-			alreadyChecked.push(threeInARow);
-			return threeInARow[0][1];
+		const foundThreeComp = inARowCheck({
+			"attackMode": true,
+			"inARow": 2,
+			"toCheck": computNumber
+		});
+		const foundThreeOfComp = foundThreeComp.length === 3;
+		if (foundThreeOfComp && foundThreeComp[0][1] === foundThreeComp[1][1] && gameBoard[foundThreeComp[0][0] - 1][foundThreeComp[0][1]] === 0) {
+			alreadyChecked.push(foundThreeComp);
+			return foundThreeComp[0][1];
 		}
-		if (foundThree && threeInARow[0][0] === threeInARow[2][0]) {
-			if (threeInARow[2][1] + 1 < cols - 1 && gameBoard[threeInARow[2][0]][threeInARow[2][1] + 1] === 0) {
-				alreadyChecked.push(threeInARow);
-				return threeInARow[2][1] + 1;
+		if (foundThreeOfComp && foundThreeComp[0][0] === foundThreeComp[2][0]) {
+			if (foundThreeComp[2][1] + 1 < cols - 1 && gameBoard[foundThreeComp[2][0]][foundThreeComp[2][1] + 1] === 0) {
+				alreadyChecked.push(foundThreeComp);
+				return foundThreeComp[2][1] + 1;
 			}
-			if (threeInARow[0][1] - 1 >= 0 && gameBoard[threeInARow[0][0]][threeInARow[0][1] - 1] === 0) {
-				alreadyChecked.push(threeInARow);
-				return threeInARow[0][1] - 1;
-			}
-		}
-		if (foundTwo && twoInARow[0][1] === twoInARow[1][1] && gameBoard[twoInARow[0][0] - 1][twoInARow[0][1]] === 0) {
-			alreadyChecked.push(twoInARow);
-			return twoInARow[0][1];
-		}
-		if (foundTwo && twoInARow[0][0] === twoInARow[1][0]) {
-			if (twoInARow[1][1] + 1 < cols - 1 &&
-				gameBoard[twoInARow[1][0]][twoInARow[1][1] + 1] === 0) {
-				alreadyChecked.push(twoInARow);
-				return twoInARow[1][1] + 1;
-			}
-			if (twoInARow[0][1] - 1 >= 0 &&
-				gameBoard[twoInARow[0][0]][twoInARow[0][1] - 1] === 0) {
-				alreadyChecked.push(twoInARow);
-				return twoInARow[0][1] - 1;
+			if (foundThreeComp[0][1] - 1 >= 0 && gameBoard[foundThreeComp[0][0]][foundThreeComp[0][1] - 1] === 0) {
+				alreadyChecked.push(foundThreeComp);
+				return foundThreeComp[0][1] - 1;
 			}
 		}
-		return randomIntFromInterval(0, cols - 1);
+
+
+		const foundThreePlayer = inARowCheck({
+			"attackMode": true,
+			"inARow": 2,
+			"toCheck": playerNumber
+		});
+		const foundThreeOfPlayer = foundThreePlayer.length === 3;
+		if (foundThreeOfPlayer && foundThreePlayer[0][1] === foundThreePlayer[1][1] && gameBoard[foundThreePlayer[0][0] - 1][foundThreePlayer[0][1]] === 0) {
+			alreadyChecked.push(foundThreePlayer);
+			return foundThreePlayer[0][1];
+		}
+		if (foundThreeOfPlayer && foundThreePlayer[0][0] === foundThreePlayer[2][0]) {
+			if (foundThreePlayer[2][1] + 1 < cols - 1 && gameBoard[foundThreePlayer[2][0]][foundThreePlayer[2][1] + 1] === 0) {
+				if (foundThreePlayer[2][0] < 5 && gameBoard[foundThreePlayer[2][0] + 1][foundThreePlayer[2][1] + 1] != 0) {
+					alreadyChecked.push(foundThreePlayer);
+					return foundThreePlayer[2][1] + 1;
+				}
+
+			}
+			if (foundThreePlayer[0][1] - 1 >= 0 && gameBoard[foundThreePlayer[0][0]][foundThreePlayer[0][1] - 1] === 0) {
+				if (foundThreePlayer[0][0] < 5 && gameBoard[foundThreePlayer[0][0] + 1][foundThreePlayer[0][1] - 1] != 0) {
+					alreadyChecked.push(foundThreePlayer);
+					return foundThreePlayer[0][1] - 1;
+				}
+			}
+		}
+
+		const foundTwoPlayer = inARowCheck({
+			"attackMode": true,
+			"inARow": 1,
+			"toCheck": playerNumber
+		});
+		const foundTwoOfPlayer = foundTwoPlayer.length === 2;
+		if (foundTwoOfPlayer && foundTwoPlayer[0][1] === foundTwoPlayer[1][1] && gameBoard[foundTwoPlayer[0][0] - 1][foundTwoPlayer[0][1]] === 0) {
+			alreadyChecked.push(foundTwoPlayer);
+			return foundTwoPlayer[0][1];
+		}
+		if (foundTwoOfPlayer && foundTwoPlayer[0][0] === foundTwoPlayer[1][0]) {
+			if (foundTwoPlayer[1][1] + 1 < cols - 1 && gameBoard[foundTwoPlayer[1][0]][foundTwoPlayer[1][1] + 1] === 0) {
+				if (foundTwoPlayer[1][0] < 5 && gameBoard[foundTwoPlayer[1][0] + 1][foundTwoPlayer[1][1] + 1] != 0) {
+					alreadyChecked.push(foundTwoPlayer);
+					return foundTwoPlayer[1][1] + 1;
+				}
+
+			}
+			if (foundTwoPlayer[0][1] - 1 >= 0 && gameBoard[foundTwoPlayer[0][0]][foundTwoPlayer[0][1] - 1] === 0) {
+				if (foundTwoPlayer[0][0] < 5 && gameBoard[foundTwoPlayer[0][0] + 1][foundTwoPlayer[0][1] - 1] != 0) {
+					alreadyChecked.push(foundTwoPlayer);
+					return foundTwoPlayer[0][1] - 1;
+				}
+			}
+		}
+
+
+		const foundTwoComp = inARowCheck({
+			"attackMode": true,
+			"inARow": 1,
+			"toCheck": playerNumber
+		});
+		const foundTwoOfComp = foundTwoComp.length === 2;
+		if (foundTwoOfComp && foundTwoComp[0][1] === foundTwoComp[1][1] && gameBoard[foundTwoComp[0][0] - 1][foundTwoComp[0][1]] === 0) {
+			alreadyChecked.push(foundTwoComp);
+			return foundTwoComp[0][1];
+		}
+		if (foundTwoOfComp && foundTwoComp[0][0] === foundTwoComp[1][0]) {
+			if (foundTwoComp[1][1] + 1 < cols - 1 && gameBoard[foundTwoComp[1][0]][foundTwoComp[1][1] + 1] === 0) {
+				alreadyChecked.push(foundTwoComp);
+				return foundTwoComp[1][1] + 1;
+			}
+			if (foundTwoComp[0][1] - 1 >= 0 && gameBoard[foundTwoComp[0][0]][foundTwoComp[0][1] - 1] === 0) {
+				alreadyChecked.push(foundTwoComp);
+				return foundTwoComp[0][1] - 1;
+			}
+		}
+		return randomIntFromInterval(1, cols - 2);
 	};
 
 	const compMove = () => {
@@ -270,7 +331,10 @@
 		sleep(125 * row).then(() => {
 			document.getElementById("d" + row + col).classList.add(playerIsRed ? "yellowPlaced" : "redPlaced");
 			sleep(150).then(() => {
-				const possibleWinners = inARowCheck(winCheckLength, false);
+				const possibleWinners = inARowCheck({
+					"attackMode": false,
+					"inARow": winCheckLength
+				});
 				document.getElementById("uiblocker").style.display = "none";
 				if (possibleWinners.length === 4) {
 					winnersHighlight(playerIsRed ? "yellowHighLight" : "redHighlight", possibleWinners);
@@ -288,6 +352,7 @@
 		playerIsRed = true;
 		isPlayersTurn = true;
 		playerNumber = 1;
+		computNumber = 2;
 		document.getElementById("selectYellow").style.display = "none";
 		document.getElementById("selectRed").removeEventListener("click", redChosen);
 		document.getElementById("selectRed").classList.remove("pointerCursor");
@@ -300,6 +365,7 @@
 		document.getElementById("selectYellow").classList.remove("pointerCursor");
 		gameStarted = true;
 		playerIsRed = false;
+		computNumber = 1;
 		playerNumber = 2;
 		sleep(400).then(() => compMove());
 	};
