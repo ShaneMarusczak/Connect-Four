@@ -23,7 +23,7 @@
 			document.getElementById("alertshader").style.display = "none";
 		});
 	};
-
+ 
 	const isAlreadyChecked = (arr) => {
 		for (const checked of alreadyChecked) {
 			if (checked == arr) return true;
