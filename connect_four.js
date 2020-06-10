@@ -385,8 +385,8 @@
 				const cell = document.createElement("div");
 				gameBoardContainer.appendChild(cell);
 				cell.id = "c" + j + i;
-				const topPosition = j * cellSize + 5;
-				const leftPosition = i * cellSize + 5;
+				const topPosition = j * cellSize;
+				const leftPosition = i * cellSize;
 				cell.style.top = topPosition + "px";
 				cell.style.left = leftPosition + "px";
 				const circleDiv = document.createElement("div");
