@@ -355,6 +355,6 @@ footer {
 }
 
 #strtOvrBtn:hover {
-	background-color: gray;
+	background-color: lightgray;
 	cursor: pointer;
 }
