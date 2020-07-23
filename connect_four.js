@@ -158,7 +158,7 @@
 					if (possibleWinners.length === 4) {
 						winnersHighlight(playerIsRed ? "redHighlight" : "yellowHighLight", possibleWinners);
 						gameOver = true;
-						window.alertModalControl("Player Wins!", 2000);
+						window.modal("Player Wins!", 2000);
 						document.getElementById("uiblocker").style.display = "none";
 					} else {
 						window.sleep(200).then(() => compMove());
@@ -328,7 +328,7 @@
 				if (possibleWinners.length === 4) {
 					winnersHighlight(playerIsRed ? "yellowHighLight" : "redHighlight", possibleWinners);
 					gameOver = true;
-					window.alertModalControl("Computer Wins!", 2000);
+					window.modal("Computer Wins!", 2000);
 					return;
 				}
 			});
