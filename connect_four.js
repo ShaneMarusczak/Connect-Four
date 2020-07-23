@@ -14,15 +14,6 @@
 	const floatingCircles = document.getElementById("floatingCircles");
 	const cellSize = 120;
 	const winCheckLength = 3;
-	const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-	const alertModalControl = (message, duration) => {
-		document.getElementById("alertshader").style.display = "block";
-		document.getElementById("alertmessage").innerText = message;
-		sleep(duration).then(() => {
-			document.getElementById("alertshader").style.display = "none";
-		});
-	};
 
 	const isAlreadyChecked = (arr) => {
 		for (const checked of alreadyChecked) {
@@ -120,10 +111,10 @@
 	const animateDrop = ({ inputRow, inputCol, moveTurn, currentRow = 0 } = {}) => {
 		if (currentRow === inputRow) return;
 		document.getElementById("d" + currentRow + inputCol).classList.add(moveTurn ? "redPlaced" : "yellowPlaced");
-		sleep(120).then(() => {
+		window.sleep(120).then(() => {
 			document.getElementById("d" + currentRow + inputCol).classList.remove(moveTurn ? "redPlaced" : "yellowPlaced");
 		});
-		sleep(125).then(() => {
+		window.sleep(125).then(() => {
 			animateDrop({
 				"currentRow": currentRow + 1,
 				inputCol,
@@ -157,9 +148,9 @@
 					break;
 				}
 			}
-			sleep(125 * startingRow).then(() => {
+			window.sleep(125 * startingRow).then(() => {
 				document.getElementById("d" + startingRow + col).classList.add(playerIsRed ? "redPlaced" : "yellowPlaced");
-				sleep(150).then(() => {
+				window.sleep(150).then(() => {
 					const possibleWinners = inARowCheck({
 						"attackMode": false,
 						"inARow": winCheckLength
@@ -167,10 +158,10 @@
 					if (possibleWinners.length === 4) {
 						winnersHighlight(playerIsRed ? "redHighlight" : "yellowHighLight", possibleWinners);
 						gameOver = true;
-						alertModalControl("Player Wins!", 2000);
+						window.alertModalControl("Player Wins!", 2000);
 						document.getElementById("uiblocker").style.display = "none";
 					} else {
-						sleep(200).then(() => compMove());
+						window.sleep(200).then(() => compMove());
 					}
 				});
 			});
@@ -204,8 +195,6 @@
 			}
 		}
 	};
-
-	const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 	const colForComp = () => {
 		const foundThreeComp = inARowCheck({
@@ -303,14 +292,14 @@
 				return foundTwoComp[0][1] - 1;
 			}
 		}
-		return randomIntFromInterval(1, cols - 2);
+		return window.randomIntFromInterval(1, cols - 2);
 	};
 
 	const compMove = () => {
 		document.getElementById("uiblocker").style.display = "block";
 		let col = colForComp();
 		while (gameBoard[0][col] !== 0) {
-			col = randomIntFromInterval(0, cols - 1);
+			col = window.randomIntFromInterval(0, cols - 1);
 		}
 		for (let i = rows - 1; i > -1; i--) {
 			if (gameBoard[i][col] === 0) {
@@ -328,9 +317,9 @@
 	};
 
 	const compStepTwo = (row, col) => {
-		sleep(125 * row).then(() => {
+		window.sleep(125 * row).then(() => {
 			document.getElementById("d" + row + col).classList.add(playerIsRed ? "yellowPlaced" : "redPlaced");
-			sleep(150).then(() => {
+			window.sleep(150).then(() => {
 				const possibleWinners = inARowCheck({
 					"attackMode": false,
 					"inARow": winCheckLength
@@ -339,7 +328,7 @@
 				if (possibleWinners.length === 4) {
 					winnersHighlight(playerIsRed ? "yellowHighLight" : "redHighlight", possibleWinners);
 					gameOver = true;
-					alertModalControl("Computer Wins!", 2000);
+					window.alertModalControl("Computer Wins!", 2000);
 					return;
 				}
 			});
@@ -367,7 +356,7 @@
 		playerIsRed = false;
 		computNumber = 1;
 		playerNumber = 2;
-		sleep(400).then(() => compMove());
+		window.sleep(400).then(() => compMove());
 	};
 
 	(() => {
